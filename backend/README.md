@@ -56,7 +56,7 @@ Create `.env` in `backend/`:
 ```env
 DATABASE_URL="postgresql://<user>:<password>@<host>:<port>/<database>?schema=public"
 JWT_SECRET="your-secret-key"
-PORT=3001
+PORT=3000
 ```
 
 
@@ -103,13 +103,6 @@ The API should be available at: `http://localhost:3000`
 
 - Health check: `GET /health`
 
-### Port mapping
-
-- Backend: `http://localhost:3000`
-- Frontend: `http://localhost:3001`
-
-> Make sure to run backend first, then frontend.
-
 ---
 
 ## 🧪 API usage (with curl)
@@ -117,7 +110,7 @@ The API should be available at: `http://localhost:3000`
 ### Register user
 
 ```bash
-curl -X POST http://localhost:3001/api/v1/auth/register \
+curl -X POST http://localhost:3000/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{"username":"testuser","email":"test@example.com","password":"password123","role":"user"}'
 ```
@@ -125,7 +118,7 @@ curl -X POST http://localhost:3001/api/v1/auth/register \
 ### Login
 
 ```bash
-curl -X POST http://localhost:3001/api/v1/auth/login \
+curl -X POST http://localhost:3000/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"password123"}'
 ```
@@ -135,7 +128,7 @@ Save returned `token` for tasks endpoints.
 ### Create task
 
 ```bash
-curl -X POST http://localhost:3001/api/v1/tasks \
+curl -X POST http://localhost:3000/api/v1/tasks \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <token>" \
   -d '{"title":"Test","description":"desc"}'
@@ -150,7 +143,26 @@ curl -H "Authorization: Bearer <token>" http://localhost:3001/api/v1/tasks
 ### Update task
 
 ```bash
-curl -X PUT http://localhost:3001/api/v1/tasks/1 \
+curl -X PUT http://localhost:3000/api/v1/tasks/1 \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <token>" \
-  -d '{"title":"New title","description":"new",
+  -d '{"title":"New title","description":"new"}
+```
+
+### Scalability Considerations
+
+This project is designed with scalability in mind:
+
+- **Modular Architecture**: The codebase is structured into routes, controllers, and services, making it easy to extend and maintain.
+
+- **Database Optimization**: PostgreSQL with Prisma ORM ensures efficient querying and scalability for structured data.
+
+- **Authentication**: JWT-based authentication enables stateless and scalable user sessions.
+
+- **Caching (Future Scope)**: Frequently accessed data (e.g., tasks) can be cached using Redis to reduce database load.
+
+- **Load Balancing**: The application can be horizontally scaled behind a load balancer to handle high traffic.
+
+- **Microservices (Future Scope)**: The system can be split into independent services (auth, tasks, etc.) for better scalability and fault isolation.
+
+- **Containerization**: Docker can be used to containerize the application for consistent deployment across environments.
